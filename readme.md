@@ -1,0 +1,1 @@
+App for fetch news and display them.
