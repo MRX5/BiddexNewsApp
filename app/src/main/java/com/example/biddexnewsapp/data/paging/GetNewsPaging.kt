@@ -45,46 +45,22 @@ class GetNewsPaging(private val endPoint: NewsService) : PagingSource<Int, NewEn
                     ignoreUnknownKeys = true
                     isLenient = true
                 }
-                val errorResponse: NewsResponse = json.decodeFromString(jsonString)
+                val errorMessage = json.decodeFromString<NewsResponse>(jsonString).message ?: ""
                 when (response.code()) {
                     400 -> {
-                        PagingSource.LoadResult.Error(
-                            NetworkException.BadRequestException(
-                                errorResponse.message ?: "BadRequestException"
-                            )
-                        )
+                        LoadResult.Error(NetworkException.BadRequestException(errorMessage))
                     }
-
                     401 -> {
-                        PagingSource.LoadResult.Error(
-                            NetworkException.UnAuthorizedException(
-                                errorResponse.message ?: "UnAuthorizedException"
-                            )
-                        )
+                        LoadResult.Error(NetworkException.UnAuthorizedException(errorMessage))
                     }
-
                     429 -> {
-                        PagingSource.LoadResult.Error(
-                            NetworkException.TooManyRequestsException(
-                                errorResponse.message ?: "TooManyRequestsException"
-                            )
-                        )
+                        LoadResult.Error(NetworkException.TooManyRequestsException(errorMessage))
                     }
-
                     500 -> {
-                        PagingSource.LoadResult.Error(
-                            NetworkException.ServerErrorException(
-                                errorResponse.message ?: "ServerErrorException"
-                            )
-                        )
+                        LoadResult.Error(NetworkException.ServerErrorException(errorMessage))
                     }
-
                     else -> {
-                        PagingSource.LoadResult.Error(
-                            NetworkException.UnknownException(
-                                errorResponse.message ?: ""
-                            )
-                        )
+                        LoadResult.Error(NetworkException.UnknownException(errorMessage))
 
                     }
                 }
@@ -92,7 +68,6 @@ class GetNewsPaging(private val endPoint: NewsService) : PagingSource<Int, NewEn
 
         } catch (exception: Exception) {
             handlePagingError(exception)
-            // LoadResult.Error(NetworkException.UnknownException(exception.message.toString()))
         }
     }
 }

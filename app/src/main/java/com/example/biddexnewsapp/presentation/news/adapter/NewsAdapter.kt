@@ -34,6 +34,7 @@ class NewsAdapter(private val onClick: (newEntity: NewEntity) -> Unit) :
             with(binding){
                 tvName.text = item.author
                 tvTitle.text = item.title
+                tvTime.text = item.publishedAt
                 tvDescription.text = item.description
                 ivImage.loadImageFromUrl(item.image)
             }

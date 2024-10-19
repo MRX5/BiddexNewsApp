@@ -41,44 +41,26 @@ fun handlePagingResponse(
             else -> {
                 when (response.code()) {
                     400 -> {
-                        PagingSource.LoadResult.Error(
-                            NetworkException.BadRequestException(bodyMessage ?: "BadRequestException")
-                        )
+                        PagingSource.LoadResult.Error(NetworkException.BadRequestException(bodyMessage!!))
                     }
-
                     401 -> {
-                        PagingSource.LoadResult.Error(
-                            NetworkException.UnAuthorizedException(
-                                bodyMessage ?: "UnAuthorizedException"
-                            )
-                        )
+                        PagingSource.LoadResult.Error(NetworkException.UnAuthorizedException(bodyMessage!!))
                     }
-
                     429 -> {
-                        PagingSource.LoadResult.Error(
-                            NetworkException.TooManyRequestsException(
-                                bodyMessage ?: "TooManyRequestsException"
-                            )
-                        )
+                        PagingSource.LoadResult.Error(NetworkException.TooManyRequestsException(bodyMessage!!))
                     }
 
                     500 -> {
-                        PagingSource.LoadResult.Error(
-                            NetworkException.ServerErrorException(
-                                bodyMessage ?: "ServerErrorException"
-                            )
-                        )
+                        PagingSource.LoadResult.Error(NetworkException.ServerErrorException(bodyMessage!!))
                     }
-
                     else -> {
-                        PagingSource.LoadResult.Error(NetworkException.UnknownException(bodyMessage ?: ""))
+                        PagingSource.LoadResult.Error(NetworkException.UnknownException(bodyMessage!!))
 
                     }
                 }
             }
         }
     } catch (exception: Exception) {
-        Log.e("TAG", "handlePagingResponse: $exception", )
         handlePagingError(exception)
     }
 }
@@ -101,7 +83,11 @@ fun convertErrorBody(throwable: HttpException): Exception {
     return try {
         val jsonString = getErrorBody(throwable.response()?.errorBody())
         if (!jsonString.isNullOrBlank()) {
-            val response: NewsResponse = Json.decodeFromString(jsonString)
+            val json = Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            }
+            val response: NewsResponse = json.decodeFromString(jsonString)
             NetworkException.UnknownException(response.message ?: "")
         } else {
             NetworkException.UnknownException(throwable.message ?: "")

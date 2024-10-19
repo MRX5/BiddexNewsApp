@@ -12,5 +12,4 @@ interface NewsService {
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int
     ): Response<NewsResponse>
-
 }
