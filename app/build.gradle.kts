@@ -85,10 +85,14 @@ dependencies {
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.jakewharton.retrofit2.kotlin.coroutines.adapter)
     implementation(libs.okhttp)
+    implementation(libs.gson)
     //implementation(libs.logginginterceptor)
 
     //Glide
     implementation(libs.glide)
+
+    //Paging
+    implementation(libs.androidx.paging.runtime)
 
     //Test
     testImplementation(libs.junit)

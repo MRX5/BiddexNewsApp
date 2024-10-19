@@ -2,25 +2,25 @@ package com.example.biddexnewsapp.presentation.news
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
-import android.provider.ContactsContract.Data
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.example.biddexnewsapp.R
+import com.example.biddexnewsapp.data.utils.handlePagingResponse
 import com.example.biddexnewsapp.databinding.FragmentNewsBinding
 import com.example.biddexnewsapp.domain.entity.NewEntity
 import com.example.biddexnewsapp.domain.utils.DataState
 import com.example.biddexnewsapp.domain.utils.NetworkException
 import com.example.biddexnewsapp.presentation.base.BaseFragment
 import com.example.biddexnewsapp.presentation.news.adapter.NewsAdapter
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -36,10 +36,21 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(FragmentNewsBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         newsObserver()
+        handlePagingResponse()
     }
 
-    override fun onViewCreated() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initToolbar(binding.toolbar.layoutToolbar, getString(R.string.news), null)
         initRv()
+        handleSwipe()
+    }
+
+    private fun handleSwipe() {
+        binding.swipe.setOnRefreshListener {
+            binding.swipe.isRefreshing = false
+            newsAdapter.refresh()
+        }
     }
 
     private fun initRv() {
@@ -52,28 +63,36 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(FragmentNewsBinding::infl
     private fun newsObserver() {
         lifecycleScope.launch {
             viewModel.newsResponse.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
-                when(it) {
-                    is DataState.Loading -> {
+                newsAdapter.submitData(lifecycle, it)
+            }
+        }
+    }
+
+    private fun handlePagingResponse(){
+        lifecycleScope.launch {
+            newsAdapter.loadStateFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
+                when(it.refresh){
+                    is LoadState.Loading -> {
                         binding.homeProgressBar.isVisible = true
                     }
-                    is DataState.Error -> {
+                    is LoadState.Error -> {
                         binding.homeProgressBar.isVisible = false
-                        //Toast.makeText(requireContext(), it.throwable.message, Toast.LENGTH_SHORT).show()
-                        Log.i("mostafa", "error:${it.throwable}")
+                        val error = (it.refresh as LoadState.Error).error
+                        val state = DataState.Error(error)
+                        state.applyCommonSideEffects()
                     }
-                    is DataState.Success -> {
-                        Log.i("mostafa", "success:${it.data}")
-                        newsAdapter.setData(it.data)
-                        binding.homeProgressBar.isVisible =  false
+                    is LoadState.NotLoading -> {
+                        binding.homeProgressBar.isVisible = false
                     }
-                    else -> {}
                 }
             }
         }
     }
 
     private fun onNewClicked(newEntity: NewEntity) {
-
+        findNavController().navigate(
+            NewsFragmentDirections.actionToNewDetailsFragment(Gson().toJson(newEntity))
+        )
     }
 
 }

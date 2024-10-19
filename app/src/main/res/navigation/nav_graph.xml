@@ -6,5 +6,18 @@
 
     <fragment
         android:id="@+id/newsFragment"
-        android:name="com.example.biddexnewsapp.presentation.news.NewsFragment" />
+        android:name="com.example.biddexnewsapp.presentation.news.NewsFragment">
+        <action
+            android:id="@+id/action_to_newDetailsFragment"
+            app:destination="@+id/newDetailsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/newDetailsFragment"
+        android:name="com.example.biddexnewsapp.presentation.new_details.NewDetailsFragment">
+        <argument
+            app:argType="string"
+            android:name="newDetails"/>
+    </fragment>
+
 </navigation>

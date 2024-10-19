@@ -7,8 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NewsResponse(
     val status: String? = "",
-    val totalResults: Int = 0,
+    val totalResults: Int? = 0,
     val articles: List<NewResource>? = null,
-    val code: String? = "",
     val message: String? = "",
 )

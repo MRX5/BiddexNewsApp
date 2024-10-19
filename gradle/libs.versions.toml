@@ -1,6 +1,7 @@
 [versions]
 agp = "8.5.0"
 glide = "4.16.0"
+gson = "2.9.0"
 hiltAndroid = "2.51.1"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -18,6 +19,7 @@ navVersion = "2.8.3"
 kspVersion = "1.9.0-1.0.13"
 hiltVersion = "2.51.1"
 okhttp = "4.11.0"
+pagingRuntime = "3.3.2"
 retrofit = "2.9.0"
 kotlinSerializationConverter = "1.0.0"
 coroutinesAdapter = "0.9.2"
@@ -29,6 +31,7 @@ fragmentKtx = "1.5.6"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
@@ -55,6 +58,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "kotlinSerializationConverter" }
 jakewharton-retrofit2-kotlin-coroutines-adapter = { module = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter", version.ref = "coroutinesAdapter" }
 logginginterceptor = { module = "com.github.ihsanbal:LoggingInterceptor", version.ref = "logginginterceptor" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
 androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }

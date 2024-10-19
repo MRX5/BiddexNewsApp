@@ -1,8 +1,10 @@
 package com.example.biddexnewsapp.domain.repository
 
+import androidx.paging.PagingSource
 import com.example.biddexnewsapp.domain.entity.NewEntity
 import com.example.biddexnewsapp.domain.utils.DataState
+import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
-    suspend fun getNewsList(): List<NewEntity>
+    fun getNewsList(): PagingSource<Int, NewEntity>
 }

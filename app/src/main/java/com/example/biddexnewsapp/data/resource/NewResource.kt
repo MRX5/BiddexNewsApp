@@ -8,8 +8,8 @@ import kotlinx.serialization.Serializable
 data class NewResource(
     val title: String? = "",
     val description: String? = "",
-    @SerialName("published_at") val publishedAt: String? = "",
-    val image: String? = "",
+    val publishedAt: String? = "",
+    val urlToImage: String? = "",
     val author: String? = "",
     val content: String? = ""
 ) {
@@ -17,7 +17,7 @@ data class NewResource(
         title = title ?: "",
         description = description ?: "",
         publishedAt = publishedAt ?: "",
-        image = image ?: "",
+        image = urlToImage ?: "",
         author = author ?: "",
     )
 }
